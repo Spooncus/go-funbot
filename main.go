@@ -13,10 +13,12 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	discord, _ := discordgo.New("Bot " + "OTEyNjQ4MzYyODgzNDMyNDQ4.YZzABQ.vWXuV0P_tePNsJX1d_y2kKrEFT8")
+	dotenv := goDotEnvVariable("BOT_TOKEN")
+	discord, _ := discordgo.New("Bot " + dotenv)
 
 	// Register messageCreate as a callback for the messageCreate events.
 	discord.AddHandler(messageCreate)
@@ -39,6 +41,18 @@ func main() {
 
 	// Cleanly close down the Discord session.
 	discord.Close()
+}
+
+func goDotEnvVariable(key string) string {
+
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	return os.Getenv(key)
 }
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
